@@ -6,36 +6,45 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-
 public class Logic {
-	WebDriver browser;
+	private WebDriver browser;
 	
-	WebElement emailForm;
-	WebElement passwForm;
-	WebElement loginSubmit;
+	private WebElement loginForm;
+	private WebElement emailInput;
+	private WebElement passwInput;
+	
+	private WebElement loginSubmit;
+	
+	private String passw;
+	private String email;
 	
 	public Logic(String email, String passw) {
 		browser = new FirefoxDriver();
+		browser.get("http://buckysroom.org/register.php");
 		
-		browser.get("http://buckysroom.org");
 		
-		emailForm = browser.findElement(By.name("email"));
-		passwForm = browser.findElement(By.name("password"));
-		loginSubmit = browser.findElement(By.name("login_submit"));
+		loginForm = browser.findElement(By.id("loginform"));
 		
-		execute(email, passw);
+		emailInput = loginForm.findElement(By.name("email"));
+		passwInput = loginForm.findElement(By.name("password"));
+		loginSubmit = loginForm.findElement(By.name("login_submit"));
+		
+		this.email = email;
+		this.passw = passw;
+		
+		run();
 	}
 	
-	private void execute(String email, String passw) {
-		emailForm.sendKeys(email);
-		passwForm.sendKeys(passw);
+	public void run() {
+		emailInput.sendKeys(email);
+		passwInput.sendKeys(passw);
 		
-		try { 
+		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		loginSubmit.click();
 		
 		browser.get("https://buckysroom.org/search.php");
@@ -46,10 +55,9 @@ public class Logic {
 		
 		//System.out.println(lastPage);
 		for (int i = 1; i <= lastPage; ++i) {
-			browser.get("https://buckysroom.org/search.php?page=" + i);
+			browser.get("https://buckysroom.org/search.php?type=0&sort=pop&page=" + i);
 			((JavascriptExecutor)browser).executeScript(payload);
-			
-			try { 
+			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.cyanboy.adder;
 
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -50,7 +51,16 @@ public class AddAll extends Application {
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 4);
         
-        btn.setOnAction(event -> { primaryStage.close(); new Logic(userTextField.getText(), pwBox.getText()); });
+        btn.setOnAction(event -> { 
+        	primaryStage.close(); 
+        	new Thread(new Task<Void>() {
+    			@Override
+    			protected Void call() {
+    				new Logic(userTextField.getText(), pwBox.getText());
+    				return null;
+    			}
+    		}).start();
+        });
         
         primaryStage.show();
 	}
